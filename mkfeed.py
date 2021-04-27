@@ -31,6 +31,7 @@ RSS_TEMPLATE = FeedTemplate("""\
    <title>%(title)s</title>
    <link>%(link)s</link>
    <description><![CDATA[%(desc)s]]></description>
+   <enclosure url="%(image)s" length="14" type="image/jpeg" />
   </item>"""
 )
 
@@ -56,7 +57,7 @@ class FeedMaker:
     def set_feed_prop(self, title, link, desc):
         self.feed_prop = Container(locals())
 
-    def set_item_prop(self, title, link, desc):
+    def set_item_prop(self, title, link, desc, image):
         self.item_prop = Container(locals())
 
     def _parse(self, string, pattern, maxitems=-1):
@@ -130,11 +131,12 @@ def main():
     p.add_argument("--item-title", metavar="TEMPLATE", required=True)
     p.add_argument("--item-link", metavar="TEMPLATE", required=True)
     p.add_argument("--item-desc", metavar="TEMPLATE", required=True)
+    p.add_argument("--item-image", metavar="TEMPLATE", required=True)
     a = p.parse_args()
     f = FeedMaker()
     f.set_patterns(a.pattern_main, a.pattern_item)
     f.set_feed_prop(a.feed_title, a.feed_link, a.feed_desc)
-    f.set_item_prop(a.item_title, a.item_link, a.item_desc)
+    f.set_item_prop(a.item_title, a.item_link, a.item_desc, a.item_image)
     f.find_items(sys.stdin.read())
     print f.make_feed()
 
